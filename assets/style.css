@@ -1,0 +1,738 @@
+:root {
+  /* MAIN PALETTE – Underwater theme */
+  --navy-deep: #01162b;
+  /* very dark */
+  --navy: #00385a;
+  --blue-mid: #6a90b4;
+  --blue-soft: #94a2bf;
+  --ice: #d2dbeb;
+
+  /* THEME MAPPING */
+  --bg: #d2dbeb;
+  /* page background */
+  --panel: rgba(1, 22, 43, 0.92);
+  /* card background */
+  --panel-soft: #f5f7fb;
+  /* light inner areas if needed */
+
+  --accent: #6a90b4;
+  /* primary buttons, links */
+  --accent-soft: #94a2bf;
+  --accent-glow: rgba(148, 162, 191, 0.7);
+
+  --text-main: #f5f7fb;
+  /* main text on dark panels */
+  --text-muted: #94a2bf;
+  /* subtle labels */
+  --input-bg: rgba(1, 22, 43, 0.75);
+  --input-border: #6a90b4;
+  --danger: #c94949;
+
+  /* BOARD & STONE COLORS */
+  --yellow: #FFD533;
+  --stone-black: #1C4EA7;
+  /* Prussian Blue for black pieces */
+  --stone-white: #D9F5F0;
+  /* Light cyan for white pieces */
+  --line: #1C1A5E;
+  /* board line color */
+}
+
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+  color: var(--text-main);
+}
+
+/* Fullscreen animated gradient behind auth card */
+.auth-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -3;
+  background: radial-gradient(circle at 20% 0%, #d2dbeb 0, #6a90b4 45%, #00385a 75%, #01162b 100%);
+  background-size: 200% 200%;
+  animation: oceanGradient 18s ease-in-out infinite alternate;
+  ;
+}
+
+/* Soft moving glow layers */
+.auth-bg::before,
+.auth-bg::after {
+  content: "";
+  position: absolute;
+  width: 60vmax;
+  height: 60vmax;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(148, 162, 191, 0.4), transparent 60%);
+  mix-blend-mode: screen;
+  opacity: 0.6;
+  animation: drift 26s linear infinite;
+}
+
+.auth-bg::after {
+  width: 40vmax;
+  height: 40vmax;
+  background: radial-gradient(circle, rgba(106, 144, 180, 0.6), transparent 65%);
+  animation-duration: 32s;
+  animation-direction: reverse;
+}
+
+@keyframes oceanGradient {
+  0% {
+    background-position: 0% 0%;
+  }
+
+  50% {
+    background-position: 50% 80%;
+  }
+
+  100% {
+    background-position: 100% 20%;
+  }
+}
+
+@keyframes drift {
+  0% {
+    transform: translate(-20%, -10%);
+  }
+
+  50% {
+    transform: translate(30%, 20%);
+  }
+
+  100% {
+    transform: translate(-10%, 40%);
+  }
+}
+
+/* Bigger, softer bubbles */
+.auth-bubbles {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* style.css */
+
+.auth-bubble,
+.lobby-bubble {
+  position: absolute;
+  border-radius: 50%;
+  overflow: hidden;
+  /* for images */
+  border: 1px solid rgba(210, 219, 235, 0.7);
+  background: transparent;
+  /* image will fill */
+  box-shadow: 0 0 18px rgba(210, 219, 235, 0.75),
+    0 0 40px rgba(148, 162, 191, 0.5);
+  opacity: 0;
+  animation: bubbleRise 26s linear infinite;
+  /* login */
+}
+
+/* keep your separate animation + duration for lobby/game/profile */
+.lobby-bubble {
+  animation: lobbyBubbleRise 26s linear infinite;
+}
+
+/* optional small/large shortcuts still work */
+.auth-bubble.sm,
+.lobby-bubble.sm {
+  --size: 30px;
+  animation-duration: 22s;
+}
+
+.auth-bubble.lg,
+.lobby-bubble.lg {
+  --size: 86px;
+  animation-duration: 30s;
+}
+
+/* image inside each bubble */
+.bubble-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+
+@keyframes bubbleRise {
+  0% {
+    transform: translate3d(var(--x-start), 105vh, 0) scale(0.85);
+    opacity: 0;
+  }
+
+  15% {
+    opacity: 0.7;
+  }
+
+  60% {
+    opacity: 0.6;
+  }
+
+  100% {
+    transform: translate3d(var(--x-end), -20vh, 0) scale(1.15);
+    opacity: 0;
+  }
+}
+
+
+
+/* Soft horizontal wave bands */
+.auth-waves {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+}
+
+/* Each band is a wide, blurred strip that moves gently */
+.auth-wave {
+  position: absolute;
+  left: -10%;
+  width: 120%;
+  height: 18vh;
+  border-radius: 50%;
+  filter: blur(14px);
+  opacity: 0.55;
+  background: linear-gradient(to right,
+      rgba(0, 56, 90, 0.0),
+      rgba(0, 56, 90, 0.75),
+      rgba(106, 144, 180, 0.9),
+      rgba(148, 162, 191, 0.0));
+  animation: waveDrift 30s ease-in-out infinite;
+}
+
+.auth-wave.mid {
+  height: 22vh;
+  background: linear-gradient(to right,
+      rgba(1, 22, 43, 0.0),
+      rgba(1, 22, 43, 0.85),
+      rgba(0, 56, 90, 0.8),
+      rgba(106, 144, 180, 0.0));
+  animation-duration: 38s;
+}
+
+.auth-wave.top {
+  height: 16vh;
+  background: linear-gradient(to right,
+      rgba(210, 219, 235, 0.0),
+      rgba(148, 162, 191, 0.55),
+      rgba(210, 219, 235, 0.0));
+  animation-duration: 46s;
+  opacity: 0.45;
+}
+
+@keyframes waveDrift {
+  0% {
+    transform: translate3d(-8%, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(10%, -8%, 0);
+  }
+
+  100% {
+    transform: translate3d(-6%, 4%, 0);
+  }
+}
+
+.auth-foreground {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  z-index: 0;
+  /* above background layers */
+}
+
+
+/* form*/
+
+.auth-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+/* Left logo cluster */
+.auth-header-logos {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.auth-logo {
+  width: 42px;
+  height: 42px;
+  border-radius: 20px;
+  object-fit: cover;
+  box-shadow: 0 0 10px rgba(210, 219, 235, 0.6);
+  border: 1px solid rgba(148, 162, 191, 0.5);
+}
+
+/* Slightly offset second logo for layered effect */
+.auth-logo.second {
+  transform: translateY(2px);
+  opacity: 0.9;
+}
+
+/* Text stack on the right of logos */
+.auth-header-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-title {
+  font-size: 24px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0;
+  font-family: Charm;
+}
+
+.auth-subtitle {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 32px 30px 28px;
+  border-radius: 24px;
+  background: linear-gradient(145deg, rgba(1, 22, 43, 0.96), rgba(0, 56, 90, 0.96));
+  box-shadow:
+    0 22px 45px rgba(1, 22, 43, 0.8),
+    0 0 40px rgba(106, 144, 180, 0.6);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(148, 162, 191, 0.5);
+}
+
+.auth-title {
+  font-size: 30px;
+  letter-spacing: 0.08em;
+  text-align: center;
+  margin: 0 0 6px;
+}
+
+.auth-subtitle {
+  text-align: center;
+  font-size: 16px;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
+/* Form controls */
+.auth-group {
+  margin-bottom: 16px;
+}
+
+.auth-label {
+  display: block;
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.auth-input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--input-border);
+  background: var(--input-bg);
+  color: var(--text-main);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.auth-input::placeholder {
+  color: rgba(212, 222, 239, 0.7);
+}
+
+.auth-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px rgba(148, 162, 191, 0.7);
+  background: rgba(1, 22, 43, 0.95);
+}
+
+/* Primary button */
+.auth-btn {
+  width: 100%;
+  margin-top: 8px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(135deg, #00385a, #6a90b4);
+  color: #f7f9ff;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 12px 28px rgba(1, 22, 43, 0.9);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s;
+}
+
+.auth-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 40px rgba(1, 22, 43, 0.9);
+}
+
+.auth-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 8px 20px rgba(1, 22, 43, 0.8);
+}
+
+/* Switch link (Login ↔ Register) */
+.auth-switch {
+  margin-top: 14px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.auth-switch a {
+  color: var(--accent-soft);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.auth-switch a:hover {
+  color: #ffffff;
+}
+
+/* Error/success messages */
+.auth-message {
+  margin-bottom: 10px;
+  font-size: 13px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: rgba(201, 73, 73, 0.1);
+  border: 1px solid rgba(201, 73, 73, 0.4);
+  color: #ffbdbd;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+h1 {
+  margin: 8px 0 4px;
+  font-weight: 800;
+}
+
+.sub {
+  margin: 0 0 16px;
+  color: var(--muted);
+}
+
+/* CARDS */
+.card {
+  background: var(--panel);
+  border: 1px solid #00000022;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 6px 20px #00000015;
+}
+
+.row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+button {
+  background: var(--accent);
+  border: none;
+  color: white;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+
+button.danger {
+  background: var(--danger);
+}
+
+input {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #00000033;
+  background: #fff;
+  color: var(--text);
+}
+
+.muted {
+  color: var(--muted);
+}
+
+/* TABLES */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+th,
+td {
+  padding: 8px;
+  border-bottom: 1px solid #00000022;
+}
+
+/* TOPBAR */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.back {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 12px;
+}
+
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===========================
+    GAME BOARD
+=========================== */
+#boardWrap {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  position: relative;
+  /* Establish stacking context */
+  z-index: 1;
+  /* Ensure the board is above the background */
+}
+
+#boardWrap::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 229px;
+  height: 223px;
+  background-image: url('isu.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0.2;
+  /* Reduce opacity for subtle background effect */
+  z-index: 0;
+  /* Place it behind the board content but within the stacking context */
+  pointer-events: none;
+  /* Allow interactions with elements below */
+}
+
+/* SVG Board Style */
+svg {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  aspect-ratio: 1;
+
+  /* NEW SOFT, LIGHT, NON-DARK BOARD COLORS */
+  background: radial-gradient(circle at 50% 40%,
+      rgb(73, 49, 73) 0%,
+      /* light peach center */
+      #cabe1c 45%,
+      /* soft peach-brown */
+      rgb(73, 49, 73) 75%,
+      /* warm tan */
+      #cabe1c 100%
+      /* medium peach-brown (NO dark brown) */
+    );
+
+  border-radius: 18px;
+  box-shadow:
+    0 2px 12px var(--accent-glow),
+    0 8px 20px rgba(0, 0, 0, 0.25);
+  border: 3px solid #0c2b2aff;
+}
+
+
+/* Lines */
+.line {
+  stroke: var(--line);
+  /* Gold color to match the logo */
+  stroke-width: 1.5;
+  /* Slightly thicker lines for better visibility */
+  opacity: 4;
+  /* Slightly transparent to blend with the background */
+  filter: drop-shadow(0 0 8px #0000FF);
+  /* Glow effect to make lines stand out */
+}
+
+/* Points (Circles) */
+.point {
+  cursor: pointer;
+  stroke: rgb(73, 67, 29);
+  /* Soft aqua outline to complement the underwater theme */
+  stroke-width: 1;
+  /* Thicker circle outline */
+  filter: drop-shadow(0 0 6px rgb(13, 23, 110));
+  /* Glow effect for circles */
+  transition: filter 0.2s, stroke 0.2s;
+}
+
+/* Empty spot */
+.point.empty {
+  fill: #FFD700;
+  /* Light sky blue fill for empty spots */
+  filter: drop-shadow(0 0 6px rgb(146, 119, 0));
+  /* Glow effect for empty spots */
+}
+
+/* Stones */
+.point.red {
+  fill: #1C4EA7;
+  stroke: #0c2b2aff;
+  /* Gold outline for black stones */
+  filter: drop-shadow(0 0 10px #0000FF);
+  /* Stronger glow effect for stones */
+}
+
+.point.white {
+  fill: #D9F5F0;
+  stroke: #0c2b2aff;
+  /* Gold outline for white stones */
+  filter: drop-shadow(0 0 10px #0000FF);
+  /* Stronger glow effect for stones */
+}
+
+.point.sel {
+  stroke-width: 1;
+  /* Thicker selection outline */
+  stroke: #c9d157;
+  /* Aqua for selection */
+  filter: drop-shadow(0 0 12px #c9d157);
+  /* Glow effect for selected points */
+}
+
+/* Labels on board */
+.label {
+  fill: var(--line);
+  font-size: 11px;
+  font-family: 'Orbitron', 'Segoe UI', Arial, sans-serif;
+}
+
+/* Status text */
+.status {
+  margin-top: 10px;
+  display: grid;
+  gap: 4px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--panel);
+  border: 1.5px solid var(--accent-glow);
+  color: var(--text);
+  box-shadow: 0 1px 4px #00000022;
+}
+
+.turnW {
+  background: var(--stone-white);
+  color: #1d1d1d;
+}
+
+.turnB {
+  background: var(--stone-black);
+  color: #fff;
+}
+
+/* Winner Modal */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.modal.hidden {
+  display: none;
+}
+
+.modal-content {
+  background: var(--panel);
+  padding: 28px 32px;
+  border-radius: 16px;
+  box-shadow: 0 5px 25px var(--accent-glow);
+  border: 2px solid var(--accent);
+  text-align: center;
+}
+
+/* Leaderboard colors */
+#board tr:nth-child(1) td:nth-child(2) {
+  color: #d4af37;
+  font-weight: bold;
+}
+
+#board tr:nth-child(2) td:nth-child(2) {
+  color: #c0c0c0;
+  font-weight: bold;
+}
+
+#board tr:nth-child(3) td:nth-child(2) {
+  color: #cd7f32;
+  font-weight: bold;
+}
+
+/* Footer */
+.site-footer {
+  background: #e5d2aa;
+  border-top: 2px solid #b08c4a;
+  padding: 15px 10px;
+  text-align: center;
+}
+
+.footer-content {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.footer-note {
+  font-size: 14px;
+  color: #5a3c1c;
+  opacity: 0.9;
+}

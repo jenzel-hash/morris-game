@@ -1,0 +1,13 @@
+{
+  "name": "Nine Men's Morris",
+  "short_name": "Morris",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "landscape-primary",
+  "background_color": "#f7e8c1",
+  "theme_color": "#d2b48c",
+  "icons": [
+    { "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
